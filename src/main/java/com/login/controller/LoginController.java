@@ -15,7 +15,7 @@ import com.login.service.LoginService;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class LoginController {
 	
 	    @Autowired
