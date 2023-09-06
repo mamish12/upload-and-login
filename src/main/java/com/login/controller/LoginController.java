@@ -17,26 +17,19 @@ import com.login.service.LoginService;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/login1")
 public class LoginController {
 	
 	    @Autowired
 	    private LoginService userService;
 
-	    @PostMapping("/login")
+	    @PostMapping("/login2")
 	    public ResponseEntity<ResponseMessage> login(@RequestBody LoginUser user) {
-	        if (userService.authenticateUser(user)) {
-	        	
-	        	   String successMessage = "Login Successful";
-	               ResponseMessage response = new ResponseMessage(successMessage);
-	               return ResponseEntity.ok(response);
-	        }
-	        else
-	        {
-	        	String successMessage = "Login Failed!!";
-	        	ResponseMessage response = new ResponseMessage(successMessage);
-	        	return ResponseEntity.ok(response);
-	        }
+	    	if (userService.authenticateUser(user)) {
+				return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage("Login Successful!"));
+			} else {
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage("Login failed!"));
+			}
 			
 	    }
 
