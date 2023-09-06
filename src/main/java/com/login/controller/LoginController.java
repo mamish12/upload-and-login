@@ -14,8 +14,8 @@ import com.login.response.ResponseMessage;
 import com.login.service.LoginService;
 
 
-@RestController
 @CrossOrigin(origins = "*")
+@RestController
 public class LoginController {
 	
 	    @Autowired

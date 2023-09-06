@@ -15,22 +15,21 @@ import com.login.service.FileService;
 @RestController
 @RequestMapping("/files")
 public class FileController {
-	
+
 	@Autowired
 	private FileService service;
-	
+
 	@PostMapping("/upload")
-	public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file)
-	{
-		if(service.hasCsvFormat(file))
-		{
-			service.processAndSaveData(file);
-			return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage("Uploaded the file successfully:"+file.getOriginalFilename()));
-			
+	public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file,
+			@RequestParam("accountNo") String accountNo, @RequestParam("bankName") String bankName) {
+		if (service.hasCsvFormat(file)) {
+			service.processAndSaveData(file, accountNo, bankName);
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(new ResponseMessage("Uploaded the file successfully:" + file.getOriginalFilename()));
+
 		}
 		return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage("please upload csv file"));
-		
+
 	}
 
 }
-

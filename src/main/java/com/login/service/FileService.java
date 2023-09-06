@@ -6,7 +6,9 @@ public interface FileService {
 
 	boolean hasCsvFormat(MultipartFile file);
 
-	void processAndSaveData(MultipartFile file);
+//	void processAndSaveData(MultipartFile file);
+
+	void processAndSaveData(MultipartFile file, String accountNo, String bankName);
 
 }
 

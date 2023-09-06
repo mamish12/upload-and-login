@@ -19,49 +19,54 @@ import com.login.entity.User;
 import com.login.repository.UserRepository;
 
 @Service
-public class FileServiceImpl implements FileService{
-	
+public class FileServiceImpl implements FileService {
+
 	@Autowired
 	private UserRepository repository;
 
 	@Override
 	public boolean hasCsvFormat(MultipartFile file) {
 		// TODO Auto-generated method stub
-		String type="text/csv";
-		if(!type.equals(file.getContentType()))
-		{
+		String type = "text/csv";
+		if (!type.equals(file.getContentType())) {
 			return false;
 		}
 		return true;
 	}
 
 	@Override
-	public void processAndSaveData(MultipartFile file) {
+	public void processAndSaveData(MultipartFile file, String accountNo, String bankName) {
 		// TODO Auto-generated method stub
 		try {
-			List<User> users=csvToUsers(file.getInputStream());
+			List<User> users = csvToUsers(file.getInputStream(), accountNo, bankName);
 			repository.saveAll(users);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
 	}
 
-	private List<User> csvToUsers(InputStream inputStream) {
-		try(BufferedReader filereReader=new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
-				CSVParser csvParser=new CSVParser(filereReader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());
-				){
-			List<User> users=new ArrayList<User>();
-			List<CSVRecord> records=csvParser.getRecords();
-			for(CSVRecord csvRecord:records)
-			{
-				User user=new User(csvRecord.get("Date"), csvRecord.get("Narration"), csvRecord.get("Value Date"), csvRecord.get("Debit Amount"), csvRecord.get("Credit Amount"), csvRecord.get("Chq/Ref Number"), csvRecord.get("Closing Balance"));
+	private List<User> csvToUsers(InputStream inputStream, String accountNo, String bankName) {
+		try (BufferedReader filereReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+				CSVParser csvParser = new CSVParser(filereReader,
+						CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());) {
+			List<User> users = new ArrayList<User>();
+			List<CSVRecord> records = csvParser.getRecords();
+			for (CSVRecord csvRecord : records) {
+				User user = new User();
+				user.setAccountNo(accountNo);
+				user.setBankName(bankName);
+
+				user.setCheque(csvRecord.get("Chq/Ref Number"));
+				user.setNaration(csvRecord.get("Narration"));
+				user.setValuedate(csvRecord.get("Value Date"));
+				user.setDebitamount(csvRecord.get("Debit Amount"));
 				users.add(user);
+
 			}
 			return users;
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -70,4 +75,3 @@ public class FileServiceImpl implements FileService{
 	}
 
 }
-
